@@ -87,9 +87,7 @@ const Page = () => {
 
       return () => clearInterval(interval);
     }
-  }, [isSuccess]);
-
-  console.log(error);
+  }, [isSuccess, router]);
 
   return (
     <main className="flex max-w-4xl h-screen justify-center space-x-7 items-center mx-auto">

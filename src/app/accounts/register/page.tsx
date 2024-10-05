@@ -49,11 +49,11 @@ const Page = () => {
 
       return () => clearInterval(interval);
     }
-  }, [isSuccess]);
+  }, [isSuccess, router]);
 
   useEffect(() => {
     if (error?.data?.error?.code === "P1001") {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "");
     }
   }, [isError]);
 
