@@ -1,24 +1,25 @@
 import { NextResponse } from "next/server";
 import { IssueData, RefinementCtx, z } from "zod";
 import { prisma } from "@/lib/primsa-db";
-
 import { hash } from "bcrypt";
 
-interface IContex extends RefinementCtx {
+// Define a custom context interface for validation issues
+interface IContext extends RefinementCtx {
   addIssue: (issue: IssueData) => void;
 }
 
-export const bodyRawSchema = z.object({
+// Define the request body schema
+const bodySchema = z.object({
   email: z
     .string()
     .email("Email Tidak Valid")
     .min(5, "Email diperlukan")
-    .superRefine(async (email: string, ctx: IContex) => {
-      const users = await prisma.user.findUnique({
+    .superRefine(async (email: string, ctx: IContext) => {
+      const user = await prisma.user.findUnique({
         where: { email },
       });
 
-      if (users) {
+      if (user) {
         ctx.addIssue({
           message: "Email sudah terdafar",
           path: ["email"],
@@ -33,12 +34,12 @@ export const bodyRawSchema = z.object({
   username: z
     .string()
     .min(3, "Nama Pengguna harus mengandung minimal 3 karakter")
-    .superRefine(async (username: string, ctx: IContex) => {
-      const users = await prisma.user.findFirst({
+    .superRefine(async (username: string, ctx: IContext) => {
+      const user = await prisma.user.findFirst({
         where: { username },
       });
 
-      if (users) {
+      if (user) {
         ctx.addIssue({
           message: "Nama pengguna tidak dapat digunakan",
           path: ["username"],
@@ -48,40 +49,53 @@ export const bodyRawSchema = z.object({
     }),
 });
 
+// Define the POST handler
 export const POST = async (request: Request) => {
   try {
-    const bodyRaw = await bodyRawSchema.parseAsync(await request.json());
+    // Parse and validate the request body
+    const body = await bodySchema.parseAsync(await request.json());
 
-    const hashedPassword = await hash(bodyRaw.password, 10);
-    //   account
+    // Hash the password
+    const hashedPassword = await hash(body.password, 10);
+
+    // Create the account
     const createAccount = await prisma.account.create({
       data: {
-        email: bodyRaw.email,
+        email: body.email,
         password: hashedPassword,
       },
     });
 
-    //   user
+    // Create the user
     const createUser = await prisma.user.create({
       data: {
-        accountId: createAccount?.id,
-        email: bodyRaw.email,
-        fullname: bodyRaw.fullname,
-        username: bodyRaw.fullname,
+        accountId: createAccount.id,
+        email: body.email,
+        fullname: body.fullname,
+        username: body.username, // Use the username from the request
       },
     });
 
+    // Respond with the created user information
     return NextResponse.json(
       {
         message: "Berhasil buat akun",
         results: createUser,
       },
-      { status: 200 }
+      { status: 201 } // Use 201 Created status
     );
   } catch (error: any) {
+    // Handle specific validation errors and general server errors
+    const isValidationError = error instanceof z.ZodError;
+
     return NextResponse.json(
-      { message: "Internal server error", error: error },
-      { status: 500 }
+      {
+        message: isValidationError
+          ? "Validation error"
+          : "Internal server error",
+        errors: isValidationError ? error.errors : undefined,
+      },
+      { status: isValidationError ? 400 : 500 }
     );
   }
 };
