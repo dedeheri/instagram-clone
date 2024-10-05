@@ -53,7 +53,7 @@ const Navigation = () => {
         {session && (
           <Avatar className="size-7">
             <AvatarImage
-              src={session?.user?.image!}
+              src={session?.user?.image || "/default-avatar.png"}
               alt="@shadcn"
               className="rounded-full"
             />

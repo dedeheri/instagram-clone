@@ -14,7 +14,7 @@ import HeartIcon from "./svg/heart-icon";
 import PlusIcon from "./svg/plus-icon";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
-const sidebarItem = ({ session }: { session: any }) => {
+const SidebarItem = ({ session }: { session: any }) => {
   const [collapase, setCollapse] = useState<boolean>(false);
 
   return (
@@ -168,4 +168,4 @@ const sidebarItem = ({ session }: { session: any }) => {
   );
 };
 
-export default sidebarItem;
+export default SidebarItem;
