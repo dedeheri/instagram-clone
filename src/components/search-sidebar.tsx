@@ -1,11 +1,10 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import SearchIcon from "./svg/search-icon";
 
 import {
   Dialog,
-  DialogBackdrop,
   DialogPanel,
   DialogTitle,
   TransitionChild,

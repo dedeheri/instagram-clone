@@ -1,3 +1,5 @@
+"use client";
+
 import HomeIcon from "./svg/home-icon";
 import SearchSidebar from "./search-sidebar";
 import Setting from "./setting";

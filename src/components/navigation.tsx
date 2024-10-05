@@ -39,7 +39,7 @@ const navigationLinks: INavigationLink[] = [
 ];
 
 const Navigation = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <section className="block md:hidden h-14 border-t bg-white dark:bg-black fixed bottom-0 w-full">

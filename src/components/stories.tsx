@@ -31,8 +31,8 @@ const Stories = ({ results, isLoading }: IStories) => {
       </button>
 
       <div ref={ref} className="flex space-x-5 overflow-hidden scroll-smooth">
-        {results?.map((result) => (
-          <div className="text-center">
+        {results?.map((result, i) => (
+          <div key={i} className="text-center">
             <Avatar className="size-[62px] border rounded-full p-0.5 bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500">
               <AvatarImage
                 src={result?.user?.profile_image?.medium}
