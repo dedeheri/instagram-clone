@@ -136,14 +136,14 @@ const sidebarItem = ({ session }: { session: any }) => {
 
             {session && (
               <div>
-                <Link href={session?.user?.username!}>
+                <Link href={session?.user?.username || "/"}>
                   <Button
                     variant="ghost"
                     className="flex group justify-start px-3  items-center space-x-4 h-12 dark:hover:bg-[#1a1a1a] rounded-lg w-full"
                   >
                     <Avatar className="size-7 bg-red-300">
                       <AvatarImage
-                        src={session?.user?.image!}
+                        src={session?.user?.image || "/default-avatar.png"}
                         alt="@shadcn"
                         className="rounded-full"
                       />

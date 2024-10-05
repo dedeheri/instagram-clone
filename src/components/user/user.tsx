@@ -19,16 +19,14 @@ const User = () => {
     params.user
   );
 
-  console.log(userCollectionPhoto);
-
   return (
     <Container>
       <div className="space-y-28 max-w-[935px] mx-auto mt-10">
         <HeaderUser data={userData} />
 
         <div className="flex space-x-5">
-          {userCollectionPhoto?.map((result: any) => (
-            <div className="text-center">
+          {userCollectionPhoto?.map((result: any, i: number) => (
+            <div key={i} className="text-center">
               <Avatar className="size-[77px] border rounded-full p-0.5 ">
                 <AvatarImage
                   src={result?.cover_photo?.urls?.regular}
@@ -45,7 +43,7 @@ const User = () => {
 
         <div className="grid grid-cols-3 gap-2">
           {userDataPhoto?.map((photo: any, i: number) => (
-            <img src={photo?.urls?.regular} className="size-[306px]" />
+            <img key={i} src={photo?.urls?.regular} className="size-[306px]" />
           ))}
         </div>
       </div>
