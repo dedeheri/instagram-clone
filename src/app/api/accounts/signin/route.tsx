@@ -20,25 +20,23 @@ export const bodyRawSchema = z
       where: { email },
     });
 
-    // check email
-    if (email && !account) {
+    if (!account) {
       ctx.addIssue({
         message: "Email belum terdafar",
         path: ["email"],
         code: "custom",
       });
-    }
+    } else {
+      // Check password
+      const passwordCompare = await compare(password, account.password || "");
 
-    // check password
-
-    const passwordCompare = await compare(password, account?.password || "");
-
-    if (account && password?.length >= 8 && !passwordCompare) {
-      ctx.addIssue({
-        message: "Kata sandi salah",
-        path: ["password"],
-        code: "custom",
-      });
+      if (!passwordCompare) {
+        ctx.addIssue({
+          message: "Kata sandi salah",
+          path: ["password"],
+          code: "custom",
+        });
+      }
     }
   });
 
