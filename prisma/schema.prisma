@@ -1,0 +1,51 @@
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://instagram-clone_owner:hz5LBnu1eJAg@ep-spring-snowflake-a1133hny.ap-southeast-1.aws.neon.tech/instagram-clone?sslmode=require"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Account {
+    id       String  @id @default(cuid())
+    email    String  @unique
+    password String? @default("")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map(name: "accounts")
+}
+
+model User {
+    id       String  @id @default(cuid())
+    email    String  @unique
+    fullname String
+    username String
+    image    String  @default("https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-75-512.png")
+    bio      String?
+    
+    
+    accountId  String?     
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    posts Post[]
+
+    @@map(name: "users")
+}
+
+model Post {
+    id          String  @id @default(cuid())
+    image       String
+    description String?
+    author      User    @relation(fields: [authorId], references: [id])
+    authorId    String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map(name: "posts")
+}
